@@ -1,0 +1,20 @@
+CREATE TABLE book (
+
+	title varchar(255) not null,
+	author varchar(50) not null,
+	publisher varchar(50) not null,
+	year_published integer not null,
+	genre varchar(30) not null,
+	have_read boolean not null,
+	collection_id integer,
+	donate boolean not null
+);
+
+INSERT INTO book (title, author, publisher, year_published, genre, have_read, collection_id, donate)
+	VALUES ('The House in the Cerulean Sea', 'TJ Klune', 'TOR', 2020, 'Fantasy', TRUE, null, FALSE);
+	
+SELECT * FROM book;
+
+
+
+
