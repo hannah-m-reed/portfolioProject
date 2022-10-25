@@ -1,0 +1,93 @@
+BEGIN TRANSACTION;
+DROP TABLE IF EXISTS collection, book_genre, genre, book;
+DROP SEQUENCE IF EXISTS book_id_serial, collection_id_serial, genre_id_serial;
+
+CREATE TABLE collection (
+    collection_id serial,
+    collection_name varchar(200) NOT NULL,
+    CONSTRAINT pk_collection_id PRIMARY KEY(collection_id)
+);
+
+CREATE TABLE book (
+	book_id serial,
+	title varchar(255) NOT NULL,
+	author varchar(50) NOT NULL,
+	publisher varchar(50) NOT NULL,
+	year_published integer NOT NULL,
+	have_read boolean NOT NULL,
+	collection_id int NULL,
+	donate boolean NOT NULL,
+	CONSTRAINT pk_book_id PRIMARY KEY (book_id),
+	CONSTRAINT fk_collection_collection_id FOREIGN KEY(collection_id) REFERENCES collection(collection_id)
+);
+
+CREATE TABLE genre (
+    genre_id serial,
+    genre_name varchar(50) NOT NULL,
+	CONSTRAINT PK_genre_id PRIMARY KEY(genre_id)
+);
+
+CREATE TABLE book_genre (
+	genre_id int NOT NULL,
+	book_id int NOT NULL,
+	CONSTRAINT pk_book_genre PRIMARY KEY (genre_id, book_id),
+	CONSTRAINT fk_book_genre_genre FOREIGN KEY (genre_id) REFERENCES genre(genre_id),
+	CONSTRAINT fk_book_genre_book FOREIGN KEY (book_id) REFERENCES book(book_id)
+);
+
+
+INSERT INTO genre (genre_name)
+	VALUES ('Fantasy'),
+			('YA'),
+			('Religion'),
+			('Prayer'),
+			('Romance'),
+			('Science Fiction'),
+			('Mystery'),
+			('Historical Fiction'),
+			('Biography'),
+			('Self-Help'),
+			('Devotional');
+			
+INSERT INTO book (title, author, publisher, year_published, have_read, donate)
+	VALUES ('The House in the Cerulean Sea', 'TJ Klune', 'TOR', 2020, true, false),
+			('What Every Christian Needs to Know About the Qur''an', 'James. R. White', 'Bethany House', 2013, true, true),
+			('The Papa Prayer', 'Larry Crabb', 'Thomas Nelson', 2006, false, false),
+			('The Bachelor''s Cat', 'L.F. Hoffman', 'Harper Collins', 1997, true, false),
+			('Morning Star', 'Pierce Brown', 'Del Ray', 2016, true, false),
+			('The Women of the Copper Country', 'Mary Doria Russell', 'Atria', 2019, false, false),
+			('Braiding Sweetgrass', 'Robin Wall Kimmerer', 'Milkweed Editions', 2013, false, false),
+			('Like Streams to the Ocean', 'Jedidiah Jenkins', 'Convergent', 2021, true, false),
+			('New Morning Mercies', 'Paul Tripp', 'Crossway', 2014, true, false),
+			('The Water Dancer', 'Ta-Nehisi Coates', 'One-World', 2019, false, false);
+			
+			
+INSERT INTO book_genre (genre_id, book_id)
+	VALUES ((SELECT genre_id FROM genre WHERE genre_name = 'Fantasy'), (SELECT book_id FROM book WHERE title = 'The House in the Cerulean Sea')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'YA'), (SELECT book_id FROM book WHERE title = 'The House in the Cerulean Sea')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Religion'), (SELECT book_id FROM book WHERE title = 'What Every Christian Needs to Know About the Qur''an')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Religion'), (SELECT book_id FROM book WHERE title = 'The Papa Prayer')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Prayer'), (SELECT book_id FROM book WHERE title = 'The Papa Prayer')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Romance'), (SELECT book_id FROM book WHERE title = 'The Bachelor''s Cat')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Science Fiction'), (SELECT book_id FROM book WHERE title = 'The Bachelor''s Cat')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Science Fiction'), (SELECT book_id FROM book WHERE title = 'Morning Star')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Historical Fiction'), (SELECT book_id FROM book WHERE title = 'The Women of the Copper Country')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Biography'), (SELECT book_id FROM book WHERE title = 'Braiding Sweetgrass')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Self-Help'), (SELECT book_id FROM book WHERE title = 'Like Streams to the Ocean')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Religion'), (SELECT book_id FROM book WHERE title = 'New Morning Mercies')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Devotional'), (SELECT book_id FROM book WHERE title = 'New Morning Mercies')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Science Fiction'), (SELECT book_id FROM book WHERE title = 'The Water Dancer')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Historical Fiction'), (SELECT book_id FROM book WHERE title = 'The Water Dancer'));
+			
+INSERT INTO collection (collection_name)
+	VALUES ('Red Rising Trilogy'),
+			('Iron Gold Trilogy');
+
+UPDATE book
+	set collection_id = (SELECT collection_id FROM collection WHERE collection_name = 'Red Rising Trilogy')
+WHERE title = 'Morning Star';
+
+SELECT * FROM book ORDER BY book_id;
+SELECT * FROM book_genre;
+
+--ROLLBACK;
