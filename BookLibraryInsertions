@@ -47,7 +47,8 @@ INSERT INTO genre (genre_name)
 			('Historical Fiction'),
 			('Biography'),
 			('Self-Help'),
-			('Devotional');
+			('Devotional'),
+			('Poetry');
 			
 INSERT INTO book (title, author, publisher, year_published, have_read, donate)
 	VALUES ('The House in the Cerulean Sea', 'TJ Klune', 'TOR', 2020, true, false),
@@ -59,7 +60,8 @@ INSERT INTO book (title, author, publisher, year_published, have_read, donate)
 			('Braiding Sweetgrass', 'Robin Wall Kimmerer', 'Milkweed Editions', 2013, false, false),
 			('Like Streams to the Ocean', 'Jedidiah Jenkins', 'Convergent', 2021, true, false),
 			('New Morning Mercies', 'Paul Tripp', 'Crossway', 2014, true, false),
-			('The Water Dancer', 'Ta-Nehisi Coates', 'One-World', 2019, false, false);
+			('The Water Dancer', 'Ta-Nehisi Coates', 'One-World', 2019, false, false),
+			('Winter Roses after Fall', 'Robert M. Drake & r.h. Sin', 'Andrews McMeel' 2021, false, false);
 			
 			
 INSERT INTO book_genre (genre_id, book_id)
@@ -77,7 +79,8 @@ INSERT INTO book_genre (genre_id, book_id)
 			((SELECT genre_id FROM genre WHERE genre_name = 'Religion'), (SELECT book_id FROM book WHERE title = 'New Morning Mercies')),
 			((SELECT genre_id FROM genre WHERE genre_name = 'Devotional'), (SELECT book_id FROM book WHERE title = 'New Morning Mercies')),
 			((SELECT genre_id FROM genre WHERE genre_name = 'Science Fiction'), (SELECT book_id FROM book WHERE title = 'The Water Dancer')),
-			((SELECT genre_id FROM genre WHERE genre_name = 'Historical Fiction'), (SELECT book_id FROM book WHERE title = 'The Water Dancer'));
+			((SELECT genre_id FROM genre WHERE genre_name = 'Historical Fiction'), (SELECT book_id FROM book WHERE title = 'The Water Dancer')),
+			((SELECT genre_id FROM genre WHERE genre_name = 'Poetry'), (SELECT book_id FROM book WHERE title = 'Winter Roses after Fall'));
 			
 INSERT INTO collection (collection_name)
 	VALUES ('Red Rising Trilogy'),
